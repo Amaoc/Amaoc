@@ -17,18 +17,21 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>404 Not Found：该页无法显示 | Amaoc</title>
-  <meta property="og:type" content="website">
-<meta property="og:title" content="404 Not Found：该页无法显示">
-<meta property="og:url" content="http://www.amaoc.cn/404.html">
+  <title>domain实现跨域 | Amaoc</title>
+  <meta name="description" content="domain实现跨域  因项目需要，需要跨域，而且是在同一个基础域名下，就选择domain来实现，过程较为简单。   前提条件  需跨域的两个域名必须属于同一个基础域名，而且所用的协议(http或https)，端口号必须要一致。否则无法利用document.domain进行跨域。   JavaScript出于对安全性的考虑，而禁止两个或者多个不同域名的页面进行相互操作。 相同的页面在相互操作的时">
+<meta property="og:type" content="article">
+<meta property="og:title" content="domain实现跨域">
+<meta property="og:url" content="http://www.amaoc.cn/2023/11/28/domain%E4%BD%BF%E7%94%A8/index.html">
 <meta property="og:site_name" content="Amaoc">
+<meta property="og:description" content="domain实现跨域  因项目需要，需要跨域，而且是在同一个基础域名下，就选择domain来实现，过程较为简单。   前提条件  需跨域的两个域名必须属于同一个基础域名，而且所用的协议(http或https)，端口号必须要一致。否则无法利用document.domain进行跨域。   JavaScript出于对安全性的考虑，而禁止两个或者多个不同域名的页面进行相互操作。 相同的页面在相互操作的时">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-11-28T03:37:46.757Z">
-<meta property="article:modified_time" content="2023-11-28T03:37:46.757Z">
+<meta property="article:published_time" content="2023-11-28T03:37:46.758Z">
+<meta property="article:modified_time" content="2023-11-28T03:37:46.758Z">
 <meta property="article:author" content="Amaoc">
+<meta property="article:tag" content="js">
 <meta name="twitter:card" content="summary">
   <!-- Canonical links -->
-  <link rel="canonical" href="http://www.amaoc.cn/404.html">
+  <link rel="canonical" href="http://www.amaoc.cn/2023/11/28/domain%E4%BD%BF%E7%94%A8/index.html">
   
     <link rel="alternate" href="/atom.xml" title="Amaoc" type="application/atom+xml">
   
@@ -39,6 +42,8 @@
 <link rel="stylesheet" href="/css/style.css">
 
   
+  
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitment@0.0.3/style/default.min.css">
   
   
   
@@ -305,16 +310,25 @@
 
   
   
+  <aside class="sidebar sidebar-toc collapse   in  " id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <nav id="toc" class="article-toc">
+      <h3 class="toc-title">文章目录</h3>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#domain%E5%AE%9E%E7%8E%B0%E8%B7%A8%E5%9F%9F"><span class="toc-number">1.</span> <span class="toc-text"> domain实现跨域</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%8D%E6%8F%90%E6%9D%A1%E4%BB%B6"><span class="toc-number">1.1.</span> <span class="toc-text"> 前提条件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#iframe%E4%B9%8B%E9%97%B4%E7%9A%84%E6%93%8D%E4%BD%9C"><span class="toc-number">1.2.</span> <span class="toc-text"> iframe之间的操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cookie%E7%9A%84domain"><span class="toc-number">1.3.</span> <span class="toc-text"> cookie的domain</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E6%A1%A3"><span class="toc-number">1.4.</span> <span class="toc-text"> 参考文档</span></a></li></ol></li></ol>
+    </nav>
+  </div>
+</aside>
+
 <main class="main" role="main">
   <div class="content">
-  <article id="page-" class="article article-type-page" itemscope itemtype="http://schema.org/BlogPosting">
+  <article id="post-domain使用" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
     
     <div class="article-header">
       
         
   
     <h1 class="article-title" itemprop="name">
-      404 Not Found：该页无法显示
+      domain实现跨域
     </h1>
   
 
@@ -322,29 +336,89 @@
       <div class="article-meta">
         <span class="article-date">
     <i class="icon icon-calendar-check"></i>
-	<a href="/404.html" class="article-date">
-	  <time datetime="2023-11-28T03:37:46.757Z" itemprop="datePublished">2023-11-28</time>
+	<a href="/2023/11/28/domain%E4%BD%BF%E7%94%A8/" class="article-date">
+	  <time datetime="2023-11-28T03:37:46.758Z" itemprop="datePublished">2023-11-28</time>
 	</a>
 </span>
         
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a>
+  </span>
+
         
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/js/" rel="tag">js</a>
+  </span>
+
 
         
 
-        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/404.html#comments" class="article-comment-link">评论</a></span>
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2023/11/28/domain%E4%BD%BF%E7%94%A8/#comments" class="article-comment-link">评论</a></span>
         
 	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 0(字)</span>
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 708(字)</span>
 	
 	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 1(分)</span>
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 2(分)</span>
 	
 
       </div>
     </div>
     <div class="article-entry marked-body" itemprop="articleBody">
       
-        <script type="text/javascript" src="//www.qq.com/404/search_children.js" charset="utf-8" homePageUrl="<%- config.url %>" homePageName="回到我的主页"></script>
+        <h2 id="domain实现跨域"><a class="markdownIt-Anchor" href="#domain实现跨域"></a> domain实现跨域</h2>
+<blockquote>
+<p>因项目需要，需要跨域，而且是在同一个基础域名下，就选择domain来实现，过程较为简单。</p>
+</blockquote>
+<h3 id="前提条件"><a class="markdownIt-Anchor" href="#前提条件"></a> 前提条件</h3>
+<blockquote>
+<p>需跨域的两个域名必须属于同一个基础域名，而且所用的协议(http或https)，端口号必须要一致。否则无法利用document.domain进行跨域。</p>
+<blockquote>
+<ol>
+<li>JavaScript出于对安全性的考虑，而禁止两个或者多个不同域名的页面进行相互操作。</li>
+<li>相同的页面在相互操作的时候，是不会任何有问题的。</li>
+</ol>
+</blockquote>
+</blockquote>
+<h3 id="iframe之间的操作"><a class="markdownIt-Anchor" href="#iframe之间的操作"></a> iframe之间的操作</h3>
+<blockquote>
+<p>例如：</p>
+<blockquote>
+<p>aaa.com的一个网页中（a.html），利用iframe引入来一个bbb.com里的页面（b.html）<br />
+这时候在a.html中可以看到b.html的内容，但是却不能利用javascript来操作它。因为这两个页面属于不同的域，在操作之前，js会检测两个页面的域是否相等，如果相等，就允许操作，如果不相等，就会拒绝操作。<br />
+这里不可能把a.html与b.html利用JavaScript改成同一个域。因为它们的基础域名不相等。（强制用JavaScript将它们改成相等的域的话，会报“参数无效错误。”）</p>
+</blockquote>
+<p>另外一种情况：</p>
+<blockquote>
+<p>如果两个子域名：<a target="_blank" rel="noopener" href="http://aaa.xxx.xn--combbb-k76j.xxx.com">aaa.xxx.com和bbb.xxx.com</a>；aaa里的页面（a.html）引入里bbb里的一个网页（b.html），这时a.html里同样不能操作b.html里面的内容。因为document.domain不一样，<a target="_blank" rel="noopener" href="http://xn--aaa-p18dohm08k.xxx.com">一个是aaa.xxx.com</a>，<a target="_blank" rel="noopener" href="http://xn--bbb-p18doh593avnjqk1a.xxx.com">另外一个是bbb.xxx.com</a>。</p>
+</blockquote>
+<p>这时我们就可以通过JavaScript，将两个页面的domain改成一样的。</p>
+<blockquote>
+<p>只需要在a.html里与b.html里都加入</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="property">domain</span> = <span class="string">&#x27;xxx.com&#x27;</span>;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>这样两个页面就可以相互操作了。也就实现了同一基础域名之间的“跨域”；</p>
+</blockquote>
+<h3 id="cookie的domain"><a class="markdownIt-Anchor" href="#cookie的domain"></a> cookie的domain</h3>
+<blockquote>
+<p>cookie虽然是由一个网页所创建，但并不只是创建cookie的网页才能读取该cookie。<br />
+在默认情况下，与创建cookie的网页在同一个目录或者子目录下的所有网页都可以读取该cookie。但是如果在这个目录下还有子目录，要使在子目录中也可以访问。则需要使用path参数设置cookie。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// test目录可以访问</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="property">cookie</span> = <span class="string">&quot;name=&quot;</span> + <span class="built_in">escape</span>(<span class="string">&quot;zhangsan&quot;</span>) + <span class="string">&quot;; path=/test&quot;</span></span><br><span class="line"><span class="comment">// 整个域名下都可以访问</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="property">cookie</span> = <span class="string">&quot;name=&quot;</span> + <span class="built_in">escape</span>(<span class="string">&quot;zhangsan&quot;</span>) + <span class="string">&quot;; path=/&quot;</span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>当如果在bbb.xxx.com域名下访问aaa.xxx.com里的cookie，就需要是用domain参数了。<br />
+例如，在aaa.xxx.com里设置cookie的domain，在bbb.xxx.com里就可以访问到了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 注意：domian基础域名参数前面最好带一个.</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="property">cookie</span> = <span class="string">&quot;name=&quot;</span> + <span class="built_in">escape</span>(<span class="string">&quot;zhangsan&quot;</span>) + <span class="string">&quot;; path=/; domain=.xxx.com&quot;</span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<h3 id="参考文档"><a class="markdownIt-Anchor" href="#参考文档"></a> 参考文档</h3>
+<blockquote>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://www.jb51.net/article/66497.htm">js设置document.domain实现跨域的注意点分析</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/ricky_li/p/3365064.html">JavaScript中cookie的路径(path)和域(domain)</a></li>
+</ol>
+</blockquote>
 
       
     </div>
@@ -354,7 +428,7 @@
     
     <li class="post-copyright-link hidden-xs">
       <strong>本文链接：</strong>
-      <a href="http://www.amaoc.cn/404.html" title="404 Not Found：该页无法显示" target="_blank" rel="external">http://www.amaoc.cn/404.html</a>
+      <a href="http://www.amaoc.cn/2023/11/28/domain%E4%BD%BF%E7%94%A8/" title="domain实现跨域" target="_blank" rel="external">http://www.amaoc.cn/2023/11/28/domain使用/</a>
     </li>
     
     <li class="post-copyright-license">
@@ -385,12 +459,40 @@
   </article>
   
     
+  <section id="comments">
+  	
+
+    
+  </section>
+
 
   
 </div>
 
   <nav class="bar bar-footer clearfix" data-stick-bottom>
   <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2023/11/28/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F%E5%92%8C%E5%8F%91%E5%B8%83(%E8%AE%A2%E9%98%85)%E6%A8%A1%E5%BC%8F/" title="观察者模式和发布-订阅模式"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2023/11/28/js%E4%B8%ADnull%E3%80%81undefined%E6%B5%85%E8%B0%88/" title="js中null、undefined浅谈"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+    <li class="toggle-toc">
+      <a class="toggle-btn " data-toggle="collapse" href="#collapseToc" aria-expanded="false" title="文章目录" role="button">    <span>[&nbsp;</span><span>文章目录</span>
+        <i class="text-collapsed icon icon-anchor"></i>
+        <i class="text-in icon icon-close"></i>
+        <span>]</span>
+      </a>
+    </li>
+    
+  </ul>
   
   
   
@@ -452,6 +554,32 @@ window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
 
 
 
+
+
+
+   
+
+
+
+
+   
+    
+<script src="//cdn.jsdelivr.net/npm/gitment@0.0.3/dist/gitment.browser.min.js"></script>
+<script>
+var gitment = new Gitment({
+  // id默认为当前页面url，如果url后带参数或锚点，gitment要重新初始化
+  // https://github.com/imsun/gitment/issues/55
+  // 解决方案：id:window.location.pathname,或者将id设置为当前页面标题
+  id: 'domain实现跨域', 
+  owner: '', // 可以是你的GitHub用户名，也可以是github id
+  repo: '',
+  oauth: {
+    client_id: '',
+    client_secret: '',
+  }
+})
+gitment.render('comments')
+</script>
 
 
 
