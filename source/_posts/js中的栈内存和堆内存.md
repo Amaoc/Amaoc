@@ -7,7 +7,6 @@ tags:
 toc: true # 是否启用内容索引
 ---
 
-# js中的栈内存和堆内存
 JavaScript的内存空间分为栈(stack)、堆(heap)、池(或叫栈中);
 
 ### 栈内存和堆内存简介

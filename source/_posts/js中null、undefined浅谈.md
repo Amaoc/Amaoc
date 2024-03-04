@@ -8,7 +8,6 @@ toc: true # 是否启用内容索引
 ---
 
 
-# js中null、undefined浅谈
 大多数计算机语言，有且只有一个表示“无”的值，比如，C语言的NULL，Java语言的null，Python语言的None，Ruby语言的nil。
     为啥JavaScript语言居然有两个表示“无”的值：undefined和null
 
