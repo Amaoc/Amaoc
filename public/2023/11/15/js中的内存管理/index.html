@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>js中的内存管理 | Amaoc</title>
+  <meta name="description" content="js中的内存管理  1. 内存的生命周期   不管什么语言，内存生命周期基本是一致的：  分配你所需的内存 使用分配到的内存（读，写） 不需要时将其释放&#x2F;归还 在C语言中，有专门的内存管理接口，像malloc() 和 free()。而在js中，没有专门的内存管理接口，所有的内存管理都是“自动”的。 js在创建变量时，自动分配内存，并在不使用的时候，自动释放。    2. JS中的内存回收 引用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="js中的内存管理">
+<meta property="og:url" content="http://www.amaoc.cn/2023/11/15/js%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/index.html">
+<meta property="og:site_name" content="Amaoc">
+<meta property="og:description" content="js中的内存管理  1. 内存的生命周期   不管什么语言，内存生命周期基本是一致的：  分配你所需的内存 使用分配到的内存（读，写） 不需要时将其释放&#x2F;归还 在C语言中，有专门的内存管理接口，像malloc() 和 free()。而在js中，没有专门的内存管理接口，所有的内存管理都是“自动”的。 js在创建变量时，自动分配内存，并在不使用的时候，自动释放。    2. JS中的内存回收 引用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.amaoc.cn/imgs/1.jpeg">
+<meta property="og:image" content="http://www.amaoc.cn/imgs/img2.webp">
+<meta property="article:published_time" content="2023-11-15T10:16:21.608Z">
+<meta property="article:modified_time" content="2023-11-15T10:41:26.994Z">
+<meta property="article:author" content="Amaoc">
+<meta property="article:tag" content="js">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://www.amaoc.cn/imgs/1.jpeg">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://www.amaoc.cn/2023/11/15/js%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Amaoc" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitment@0.0.3/style/default.min.css">
+  
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body class="main-center theme-purple" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/amaoc" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Amaoc</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Web Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Xiamen, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/amaoc" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a><span class="category-list-count">10</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/" rel="tag">css</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/js/" rel="tag">js</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/stylelint/" rel="tag">stylelint</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/" rel="tag">开发规范</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/css/" style="font-size: 13px;">css</a> <a href="/tags/js/" style="font-size: 14px;">js</a> <a href="/tags/stylelint/" style="font-size: 13px;">stylelint</a> <a href="/tags/%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/" style="font-size: 13px;">开发规范</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a><span class="archive-list-count">10</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/11/17/js%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6/" class="title">js垃圾回收机制</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-11-17T10:32:16.056Z" itemprop="datePublished">2023-11-17</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/11/15/js%E4%B8%AD%E7%9A%84%E6%A0%88%E5%86%85%E5%AD%98%E5%92%8C%E5%A0%86%E5%86%85%E5%AD%98/" class="title">js中的栈内存和堆内存</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-11-15T10:16:33.024Z" itemprop="datePublished">2023-11-15</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/11/15/%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E6%B5%85%E6%8B%B7%E8%B4%9D/" class="title">深拷贝与浅拷贝</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-11-15T10:16:33.015Z" itemprop="datePublished">2023-11-15</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/11/15/js%E4%B8%ADnull%E3%80%81undefined%E6%B5%85%E8%B0%88/" class="title">js中null、undefined浅谈</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-11-15T10:16:21.656Z" itemprop="datePublished">2023-11-15</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/11/15/js%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" class="title">js中的内存管理</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-11-15T10:16:21.608Z" itemprop="datePublished">2023-11-15</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+  <aside class="sidebar sidebar-toc collapse   in  " id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <nav id="toc" class="article-toc">
+      <h3 class="toc-title">文章目录</h3>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#js%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text"> js中的内存管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%86%85%E5%AD%98%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-number">1.0.1.</span> <span class="toc-text"> 1. 内存的生命周期</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-js%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E5%9B%9E%E6%94%B6"><span class="toc-number">1.0.2.</span> <span class="toc-text"> 2. JS中的内存回收</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E4%BB%80%E4%B9%88%E6%98%AF%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2"><span class="toc-number">1.0.3.</span> <span class="toc-text"> 3. 什么是内存泄露？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%B8%B8%E8%A7%81%E7%9A%84%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E6%A1%88%E4%BE%8B"><span class="toc-number">1.0.4.</span> <span class="toc-text"> 4. 常见的内存泄露案例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#es6"><span class="toc-number">1.0.5.</span> <span class="toc-text"> ES6</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E6%A1%A3"><span class="toc-number">1.1.</span> <span class="toc-text"> 参考文档</span></a></li></ol></li></ol>
+    </nav>
+  </div>
+</aside>
+
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-js中的内存管理" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      js中的内存管理
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2023/11/15/js%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" class="article-date">
+	  <time datetime="2023-11-15T10:16:21.608Z" itemprop="datePublished">2023-11-15</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/js/" rel="tag">js</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2023/11/15/js%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 1.8k(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 6(分)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h1 id="js中的内存管理"><a class="markdownIt-Anchor" href="#js中的内存管理"></a> js中的内存管理</h1>
+<h3 id="1-内存的生命周期"><a class="markdownIt-Anchor" href="#1-内存的生命周期"></a> 1. 内存的生命周期</h3>
+<blockquote>
+<p><img src="/imgs/1.jpeg" alt="内存生命周期" /><br />
+不管什么语言，内存生命周期基本是一致的：</p>
+<ol>
+<li>分配你所需的内存</li>
+<li>使用分配到的内存（读，写）</li>
+<li>不需要时将其释放/归还<br />
+在C语言中，有专门的内存管理接口，像malloc() 和 free()。而在js中，没有专门的内存管理接口，所有的内存管理都是“自动”的。<br />
+js在创建变量时，自动分配内存，并在不使用的时候，自动释放。</li>
+</ol>
+</blockquote>
+<h3 id="2-js中的内存回收"><a class="markdownIt-Anchor" href="#2-js中的内存回收"></a> 2. JS中的内存回收</h3>
+<p>引用</p>
+<blockquote>
+<p>垃圾回收算法主要依赖于引用的概念，在内存管理的环境中，一个对象如果有访问另一个对象的权限（隐式或显式），叫做一个对象引用另一个对象。<br />
+例如：一个Javascript对象具有堆它原型的引用（隐式引用）和它属性的引用（显式引用）。</p>
+</blockquote>
+<ol>
+<li>引用计数垃圾收集</li>
+</ol>
+<blockquote>
+<p>这是最简单的垃圾回收机制算法。此算法把“对象是否不再需要”简化定义为“对象有没有其他对象引用到它”。如果没有引用指向对象（零引用，对象将被垃圾回收机制回收）<br />
+例：</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>];</span><br><span class="line">arr = <span class="literal">null</span>; <span class="comment">// [1, 2, 3, 4]这时没有被引用，会被自动回收</span></span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>限制：循环引用</li>
+</ol>
+<blockquote>
+<p>两个对象被创建并相互引用，就造成零循环引用。它们被调用之后不会离开函数的作用域，所以它们已经没用零，可以被回收了。然而，引用计数算法考虑它们相互都有至少一次引用，所以它们不会被回收<br />
+例：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">f</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> o1 = &#123;&#125;;</span><br><span class="line">  <span class="keyword">var</span> o2 = &#123;&#125;;</span><br><span class="line">  o1.<span class="property">p</span> = o2; <span class="comment">// o1 引用了 o2</span></span><br><span class="line">  o2.<span class="property">p</span> = o1; <span class="comment">// o2 引用了 o1</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_">f</span>();</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> div;</span><br><span class="line"><span class="variable language_">window</span>.<span class="property">onload</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  div = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;myDivElement&quot;</span>);</span><br><span class="line">  div.<span class="property">circularReference</span> = div;</span><br><span class="line">  div.<span class="property">lotsOfData</span> = <span class="keyword">new</span> <span class="title class_">Array</span>(<span class="number">10000</span>).<span class="title function_">join</span>(<span class="string">&quot;*&quot;</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>上面的例子里，myDivElement这个Dom元素的circularRerence属性引用了myDivElement造成了循环引用。IE6，7使用引用计数方式对DOM对象进行垃圾回收。该方法常常造成对象被循环引用时内存发生泄露。现代浏览器通过使用标记-清除内存回收算法，来解决这一个问题。</p>
+</blockquote>
+<ol start="3">
+<li>标记-清楚算法</li>
+</ol>
+<blockquote>
+<p>这个算法把“对象是否不再需要”简化定义为“对象是否可以获得”。</p>
+<p>这个算法假定设置一个叫根root的对象（在JavaScript里，根是全局对象）。垃圾回收器将从根开始定期的找所有从根开始引用的对象，然后找这些对象引用的对象，从根开始，垃圾回收器将找到所有可以获得的对象和所有不能获得的对象。</p>
+<p>从2012年起，所有现代浏览器都使用了标记-清除内存回收算法。所有对JavaScript垃圾回收算法的改进都是基于标记-清除算法。</p>
+<p><img src="/imgs/img2.webp" alt="标记-清除算法" /></p>
+</blockquote>
+<ol start="4">
+<li>自动GC垃圾回收机制</li>
+</ol>
+<blockquote>
+<p>尽管自动GC很方便，但是我们不知道GC什么时候会进行。这意味着如果我们在使用过程中使用了大量的内存，而GC没有运行的情况下，或者GC无法回收这些内存的情况下，程序就有可能假死，这个就需要我们在程序中手动做一些操作来触发内存回收了。</p>
+</blockquote>
+<h3 id="3-什么是内存泄露"><a class="markdownIt-Anchor" href="#3-什么是内存泄露"></a> 3. 什么是内存泄露？</h3>
+<blockquote>
+<p>本质的讲，内存泄露就是不再被需要的内存，由于某种原因，无法被释放。</p>
+</blockquote>
+<h3 id="4-常见的内存泄露案例"><a class="markdownIt-Anchor" href="#4-常见的内存泄露案例"></a> 4. 常见的内存泄露案例</h3>
+<ol>
+<li>全局变量</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span> (arg) &#123;</span><br><span class="line">  bar = <span class="string">&quot;some text&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在js中处理未被声明的变量，上述范例中的bar时，会把bar定义到全局对象中，在浏览器中就是window上。在页面中的全局变量，只有当页面被关闭后才会被销毁。所以这种写法就会造成内存泄露，当然这个例子中的泄露的只是一个简单的字符串，但是在实际的代码中，往往情况会更加糟糕。</p>
+<p>另外一种意外创建全局变量的情况。</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span> () &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">var1</span> = <span class="string">&quot;potential accidental global&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// foo 被调用时，this指向全局变量window</span></span><br><span class="line"><span class="title function_">foo</span>();</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这种情况下调用foo，this被指向了全局变量window，意外的创建了全局变量。</p>
+<p>我们谈到了一些意外情况下定义的全局变量，代码中也有一些我们明确定义的全局变量。如果使用这些全局变量用来暂存大量的数据，记得在使用后，对其重新赋值为null。</p>
+</blockquote>
+<ol start="2">
+<li>未销毁的定时器和回调函数</li>
+</ol>
+<blockquote>
+<p>很多库中，如果使用了观察者模式，都会提供回调方法，来调用一些回调函数。要记得回收这些回调函数。例：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> serverData = <span class="title function_">loadData</span>();</span><br><span class="line"><span class="built_in">setInterval</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> renderer = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;renderer&#x27;</span>);</span><br><span class="line">  <span class="keyword">if</span> (renderer) &#123;</span><br><span class="line">    renderer.<span class="property">innerHTML</span> = <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(serverData);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;, <span class="number">5000</span>); <span class="comment">// 每5秒调用一次</span></span><br></pre></td></tr></table></figure>
+<p>如果后续renderer元素被移除，整个定时器实际上没有任何作用。但是如果你没有回收定时器，整个定时器依然有效，不但定时器无法被内存回收，定时器函数中的依赖也无法回收(serverData也无法被回收)。</p>
+</blockquote>
+<ol start="3">
+<li>闭包</li>
+</ol>
+<blockquote>
+<p>在js开发中，我们经常会用到内部函数，有权访问包含它的外部函数的变量。<br />
+注意下面这种情况，闭包也会造成内存泄露</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> theThing = <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">var</span> replaceThing = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> originalThing = theThing;</span><br><span class="line">  <span class="keyword">var</span> unused = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (originalThing) &#123; <span class="comment">// 对于‘originalThing’的引用</span></span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;hi&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  theThing = &#123;</span><br><span class="line">    <span class="attr">longStr</span>: <span class="keyword">new</span> <span class="title class_">Array</span>(<span class="number">1000000</span>).<span class="title function_">join</span>(<span class="string">&#x27;*&#x27;</span>),</span><br><span class="line">    <span class="attr">someMethod</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;message&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">setInterval</span>(replaceThing, <span class="number">10000</span>);</span><br></pre></td></tr></table></figure>
+<p>每次调用replaceThing时，theThing获得了包含一个巨大的数组和一个对于新闭包someMethod的对象，同时unused是一个引用了originalThing的闭包。<br />
+闭包之间是共享作用域的，尽管unused可能一只都没有被调用，但是someMethod可能会被调用，就会导致内存无法对其进行回收。</p>
+</blockquote>
+<ol start="4">
+<li>DOM引用</li>
+</ol>
+<blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> elements = &#123;</span><br><span class="line">  <span class="attr">image</span>: <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;image&#x27;</span>)</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">doStuff</span>(<span class="params"></span>) &#123;</span><br><span class="line">  elements.<span class="property">image</span>.<span class="property">src</span> = <span class="string">&#x27;http://example.com/img.png&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">removeImage</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">removeChild</span>(<span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;image&#x27;</span>));</span><br><span class="line">  <span class="comment">// 这个时候，我们对于#image 仍然有一个引用，Image元素仍然无法被内存回收。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意：<br />
+如果我们引用了一个表格中的td元素，一旦在DOM中删除了整个表格，我们直观的认为内存回收应该回收了除了有引用的td外的其他元素，但是事实上，这个td元素是整个表格的一个子元素，并保留对于其父元素的引用。这个就会导致整个表格都无法进行内存回收。所以我们要小心处理DOM元素的引用。</p>
+</blockquote>
+<h3 id="es6"><a class="markdownIt-Anchor" href="#es6"></a> ES6</h3>
+<blockquote>
+<p>ES中引入了WeakSet和WeakMap两个新概念，来解决引用造成的内存回收问题。WeakSet和WeakMap对于值的引用可以忽略不计，它们对于值的引用都是弱引用，内存回收机制不会考虑这种引用。当其他引用被消除之后，引用就会被内存中释放。</p>
+</blockquote>
+<h2 id="参考文档"><a class="markdownIt-Anchor" href="#参考文档"></a> 参考文档</h2>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/b31c7d5e8311">JS中的内存管理</a></li>
+</ol>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://www.amaoc.cn/2023/11/15/js%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" title="js中的内存管理" target="_blank" rel="external">http://www.amaoc.cn/2023/11/15/js中的内存管理/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/amaoc" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/amaoc" target="_blank"><span class="text-dark">Amaoc</span><small class="ml-1x">Web Developer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2023/11/15/js%E4%B8%ADnull%E3%80%81undefined%E6%B5%85%E8%B0%88/" title="js中null、undefined浅谈"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2023/11/15/stylelint%E5%88%9D%E6%AC%A1%E4%BD%BF%E7%94%A8/" title="stylelint 初次使用（vue）"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+    <li class="toggle-toc">
+      <a class="toggle-btn " data-toggle="collapse" href="#collapseToc" aria-expanded="false" title="文章目录" role="button">    <span>[&nbsp;</span><span>文章目录</span>
+        <i class="text-collapsed icon icon-anchor"></i>
+        <i class="text-in icon icon-close"></i>
+        <span>]</span>
+      </a>
+    </li>
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/amaoc" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+<script src="//cdn.jsdelivr.net/npm/gitment@0.0.3/dist/gitment.browser.min.js"></script>
+<script>
+var gitment = new Gitment({
+  // id默认为当前页面url，如果url后带参数或锚点，gitment要重新初始化
+  // https://github.com/imsun/gitment/issues/55
+  // 解决方案：id:window.location.pathname,或者将id设置为当前页面标题
+  id: 'js中的内存管理', 
+  owner: '', // 可以是你的GitHub用户名，也可以是github id
+  repo: '',
+  oauth: {
+    client_id: '',
+    client_secret: '',
+  }
+})
+gitment.render('comments')
+</script>
+
+
+
+
+
+
+
+
+
+</body>
+</html>

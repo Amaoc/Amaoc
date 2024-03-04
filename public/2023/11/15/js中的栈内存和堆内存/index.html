@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>js中的栈内存和堆内存 | Amaoc</title>
+  <meta name="description" content="js中的栈内存和堆内存 JavaScript的内存空间分为栈(stack)、堆(heap)、池(或叫栈中);  栈内存和堆内存简介 JavaScript中并没有严格意义上区分栈内存和堆内存。  栈数据结构 执行上下文的执行顺序借用了栈数据结构的存取方式； 栈空间的特点：先进后出，后进先出；  由于栈具有后入先出的特点，所以任何不在栈顶的元素都无法访问。 为了得到栈底的元素，必须先拿掉上面的元素；">
+<meta property="og:type" content="article">
+<meta property="og:title" content="js中的栈内存和堆内存">
+<meta property="og:url" content="http://www.amaoc.cn/2023/11/15/js%E4%B8%AD%E7%9A%84%E6%A0%88%E5%86%85%E5%AD%98%E5%92%8C%E5%A0%86%E5%86%85%E5%AD%98/index.html">
+<meta property="og:site_name" content="Amaoc">
+<meta property="og:description" content="js中的栈内存和堆内存 JavaScript的内存空间分为栈(stack)、堆(heap)、池(或叫栈中);  栈内存和堆内存简介 JavaScript中并没有严格意义上区分栈内存和堆内存。  栈数据结构 执行上下文的执行顺序借用了栈数据结构的存取方式； 栈空间的特点：先进后出，后进先出；  由于栈具有后入先出的特点，所以任何不在栈顶的元素都无法访问。 为了得到栈底的元素，必须先拿掉上面的元素；">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.amaoc.cn/imgs/1.webp">
+<meta property="og:image" content="http://www.amaoc.cn/imgs/2.webp">
+<meta property="og:image" content="http://www.amaoc.cn/imgs/7.png">
+<meta property="article:published_time" content="2023-11-15T10:16:33.024Z">
+<meta property="article:modified_time" content="2023-11-15T10:41:29.588Z">
+<meta property="article:author" content="Amaoc">
+<meta property="article:tag" content="js">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://www.amaoc.cn/imgs/1.webp">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://www.amaoc.cn/2023/11/15/js%E4%B8%AD%E7%9A%84%E6%A0%88%E5%86%85%E5%AD%98%E5%92%8C%E5%A0%86%E5%86%85%E5%AD%98/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Amaoc" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitment@0.0.3/style/default.min.css">
+  
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body class="main-center theme-purple" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/amaoc" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Amaoc</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Web Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Xiamen, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/amaoc" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a><span class="category-list-count">10</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/" rel="tag">css</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/js/" rel="tag">js</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/stylelint/" rel="tag">stylelint</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/" rel="tag">开发规范</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/css/" style="font-size: 13px;">css</a> <a href="/tags/js/" style="font-size: 14px;">js</a> <a href="/tags/stylelint/" style="font-size: 13px;">stylelint</a> <a href="/tags/%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/" style="font-size: 13px;">开发规范</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a><span class="archive-list-count">10</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/11/17/js%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6/" class="title">js垃圾回收机制</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-11-17T10:32:16.056Z" itemprop="datePublished">2023-11-17</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/11/15/js%E4%B8%AD%E7%9A%84%E6%A0%88%E5%86%85%E5%AD%98%E5%92%8C%E5%A0%86%E5%86%85%E5%AD%98/" class="title">js中的栈内存和堆内存</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-11-15T10:16:33.024Z" itemprop="datePublished">2023-11-15</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/11/15/%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E6%B5%85%E6%8B%B7%E8%B4%9D/" class="title">深拷贝与浅拷贝</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-11-15T10:16:33.015Z" itemprop="datePublished">2023-11-15</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/11/15/js%E4%B8%ADnull%E3%80%81undefined%E6%B5%85%E8%B0%88/" class="title">js中null、undefined浅谈</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-11-15T10:16:21.656Z" itemprop="datePublished">2023-11-15</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/11/15/js%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" class="title">js中的内存管理</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-11-15T10:16:21.608Z" itemprop="datePublished">2023-11-15</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+  <aside class="sidebar sidebar-toc collapse   in  " id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <nav id="toc" class="article-toc">
+      <h3 class="toc-title">文章目录</h3>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#js%E4%B8%AD%E7%9A%84%E6%A0%88%E5%86%85%E5%AD%98%E5%92%8C%E5%A0%86%E5%86%85%E5%AD%98"><span class="toc-number">1.</span> <span class="toc-text"> js中的栈内存和堆内存</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%88%E5%86%85%E5%AD%98%E5%92%8C%E5%A0%86%E5%86%85%E5%AD%98%E7%AE%80%E4%BB%8B"><span class="toc-number">1.0.1.</span> <span class="toc-text"> 栈内存和堆内存简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%88%E5%86%85%E5%AD%98%E5%92%8C%E5%A0%86%E5%86%85%E5%AD%98%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">1.0.2.</span> <span class="toc-text"> 栈内存和堆内存的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B5%8B%E5%80%BC%E4%B8%8E%E8%B5%8B%E5%9D%80"><span class="toc-number">1.0.3.</span> <span class="toc-text"> 赋值与赋址</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E5%92%8C%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6"><span class="toc-number">1.0.4.</span> <span class="toc-text"> 内存分配和垃圾回收</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%84%91%E6%B4%9E"><span class="toc-number">1.0.5.</span> <span class="toc-text"> 脑洞</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E6%A1%88"><span class="toc-number">1.1.</span> <span class="toc-text"> 参考文案</span></a></li></ol></li></ol>
+    </nav>
+  </div>
+</aside>
+
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-js中的栈内存和堆内存" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      js中的栈内存和堆内存
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2023/11/15/js%E4%B8%AD%E7%9A%84%E6%A0%88%E5%86%85%E5%AD%98%E5%92%8C%E5%A0%86%E5%86%85%E5%AD%98/" class="article-date">
+	  <time datetime="2023-11-15T10:16:33.024Z" itemprop="datePublished">2023-11-15</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/js/" rel="tag">js</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2023/11/15/js%E4%B8%AD%E7%9A%84%E6%A0%88%E5%86%85%E5%AD%98%E5%92%8C%E5%A0%86%E5%86%85%E5%AD%98/#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 1.2k(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 4(分)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h1 id="js中的栈内存和堆内存"><a class="markdownIt-Anchor" href="#js中的栈内存和堆内存"></a> js中的栈内存和堆内存</h1>
+<p>JavaScript的内存空间分为栈(stack)、堆(heap)、池(或叫栈中);</p>
+<h3 id="栈内存和堆内存简介"><a class="markdownIt-Anchor" href="#栈内存和堆内存简介"></a> 栈内存和堆内存简介</h3>
+<p>JavaScript中并没有严格意义上区分栈内存和堆内存。</p>
+<ol>
+<li>栈数据结构<br />
+执行上下文的执行顺序借用了栈数据结构的存取方式；<br />
+栈空间的特点：先进后出，后进先出；<br />
+<img src="/imgs/1.webp" alt="栈数据结构" /><br />
+由于栈具有后入先出的特点，所以任何不在栈顶的元素都无法访问。<br />
+为了得到栈底的元素，必须先拿掉上面的元素；<br />
+类似乒乓球盒子来分析栈的存取方式。</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">栈会自动分配内存空间，物理内存是连续的，可以存放基本类型（Boolean,Number,String,undefined,null,Symbol），简单的数据段，引用类型的物理地址；</span><br><span class="line">占用空间小（大小固定），通过按值来访问，属于被频繁使用的数据。  </span><br><span class="line"></span><br><span class="line">PS：闭包中的基本数据类型变量不会保存在栈内存中，而是保存在堆内存中。</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>堆数据结构<br />
+堆是一种经过排序的树形数据结构，每个结点都有一个值。<br />
+通常我们所属的堆的数据结构，是指二叉堆。<br />
+堆的特点是根结点的值最小（或最大），且根结点的两个子树也是一个堆。<br />
+这种树状结构，它的存储数据的方式是随意的，与书架与书非常相似。我们不关心书的放置顺序是怎样的，只需要知道书的名字就可以取出我们想要的书了。<br />
+虽然书的摆放是有顺序的，但我们想取任意一本时不必像栈一样，先取出前面的所有书。</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">引用数据类型（Array,Object, Function）存储在堆内存中，因为引用数据类型占据空间大（大小不固定），如果存储在栈中，将会影响程序运行的性能。</span><br><span class="line">引用数据类型在栈中存储了指针，该指针指向堆中该实体的起始地址。</span><br><span class="line">当解释器寻找引用值时，会首先检索其在栈中的地址，取得地址后从堆中获得实体。</span><br><span class="line"></span><br><span class="line">堆内存是动态分配的内存，物理地址不连续，大小不定也不会自动释放内存；</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>队列<br />
+在Javascript中，理解队列数据结构的目的主要是为了清晰的明白事件循环（Event Loop）的机制<br />
+队列的特点：先进先出，后进后出。<br />
+<img src="/imgs/2.webp" alt="队列数据结构" /></li>
+</ol>
+<h3 id="栈内存和堆内存的区别"><a class="markdownIt-Anchor" href="#栈内存和堆内存的区别"></a> 栈内存和堆内存的区别</h3>
+<ol>
+<li>
+<p>栈内存：所有在方法中定义的变量都是放在栈内存中，随着方法的执行结束，这个方法的内存栈也自然销毁。<br />
+优点：存取速度比堆快，仅次于直接位于CPU中的寄存器，数据可共享；<br />
+缺点：存在栈中的数据大小与生存期必须是确定的，缺乏灵活性。</p>
+</li>
+<li>
+<p>堆内存：堆内存中的对象不会随方法的结束而销毁，即使方法结束后，这个对象海可能被另一个引用变量所引用（参数传递）</p>
+</li>
+</ol>
+<h3 id="赋值与赋址"><a class="markdownIt-Anchor" href="#赋值与赋址"></a> 赋值与赋址</h3>
+<p>引擎不能直接操作堆内存中的数据，这就造成了对同一个变量赋不同类型的值，会出现完全不同的效果：<br />
+为一个变量赋基本值时，实际上是创建一个新值，然后把该值赋给新变量，可以说这是一种真正意义上的“赋值”；<br />
+为一个变量赋引用值时，实际上是为新变量添加一个指针，指向堆内存中的一个对象，属于一直“赋址”操作。<br />
+<img src="/imgs/7.png" alt="图片" /></p>
+<h3 id="内存分配和垃圾回收"><a class="markdownIt-Anchor" href="#内存分配和垃圾回收"></a> 内存分配和垃圾回收</h3>
+<p>一般来说栈内存线性有序存储，容量小，系统分配效率高。而堆内存首先要在堆内存新分配存储区域，之后又要把指针存储到栈内存中，效率相对就要比较低一些。<br />
+垃圾回收方面，栈内存变量基本上用完了就回收了，而堆内存中的变量因为存在很多不确定的引用，只有当所有调用的变量全部销毁之后才能回收。</p>
+<h3 id="脑洞"><a class="markdownIt-Anchor" href="#脑洞"></a> 脑洞</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1. const 定义的基本类型不能改变，但是定义的对象是可以通过修改对象属性等方法来改变的。</span><br><span class="line">因为我们定义一个const对象的时候，，我们说的常量其实是一个指针，就是说const对象对应的堆内存指向是不变的，但是堆内存中的数据本身的大小或者属性是可变的。</span><br></pre></td></tr></table></figure>
+<h2 id="参考文案"><a class="markdownIt-Anchor" href="#参考文案"></a> 参考文案</h2>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/heioray/p/9487093.html">浅析js中的栈内存和堆内存</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/a59612/article/details/93661354">中高级前端必须了解的–JS中的栈内存和堆内存</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/0b18e120955b">JavaScript栈内存与堆内存</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jb51.net/article/159120.htm">详解JavaScript栈内存与堆内存</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_36747861/article/details/84958366">js中的栈内存和堆内存</a></li>
+</ol>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://www.amaoc.cn/2023/11/15/js%E4%B8%AD%E7%9A%84%E6%A0%88%E5%86%85%E5%AD%98%E5%92%8C%E5%A0%86%E5%86%85%E5%AD%98/" title="js中的栈内存和堆内存" target="_blank" rel="external">http://www.amaoc.cn/2023/11/15/js中的栈内存和堆内存/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/amaoc" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/amaoc" target="_blank"><span class="text-dark">Amaoc</span><small class="ml-1x">Web Developer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2023/11/17/js%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6/" title="js垃圾回收机制"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2023/11/15/%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E6%B5%85%E6%8B%B7%E8%B4%9D/" title="深拷贝与浅拷贝"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+    <li class="toggle-toc">
+      <a class="toggle-btn " data-toggle="collapse" href="#collapseToc" aria-expanded="false" title="文章目录" role="button">    <span>[&nbsp;</span><span>文章目录</span>
+        <i class="text-collapsed icon icon-anchor"></i>
+        <i class="text-in icon icon-close"></i>
+        <span>]</span>
+      </a>
+    </li>
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/amaoc" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+<script src="//cdn.jsdelivr.net/npm/gitment@0.0.3/dist/gitment.browser.min.js"></script>
+<script>
+var gitment = new Gitment({
+  // id默认为当前页面url，如果url后带参数或锚点，gitment要重新初始化
+  // https://github.com/imsun/gitment/issues/55
+  // 解决方案：id:window.location.pathname,或者将id设置为当前页面标题
+  id: 'js中的栈内存和堆内存', 
+  owner: '', // 可以是你的GitHub用户名，也可以是github id
+  repo: '',
+  oauth: {
+    client_id: '',
+    client_secret: '',
+  }
+})
+gitment.render('comments')
+</script>
+
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>stylelint 初次使用（vue） | Amaoc</title>
+  <meta name="description" content="stylelint 初次使用（vue）  很早就知道样式校验了，但是一直都没有去了解，因公司对样式比较关怀，所以特意去研究了一下，效果倍爽。。。   安装 12345yarn add stylelint stylelint-config-standard stylelint-config-rational-order stylelint-order stylelint-scss stylelin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="stylelint 初次使用（vue）">
+<meta property="og:url" content="http://www.amaoc.cn/2023/11/15/stylelint%E5%88%9D%E6%AC%A1%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="Amaoc">
+<meta property="og:description" content="stylelint 初次使用（vue）  很早就知道样式校验了，但是一直都没有去了解，因公司对样式比较关怀，所以特意去研究了一下，效果倍爽。。。   安装 12345yarn add stylelint stylelint-config-standard stylelint-config-rational-order stylelint-order stylelint-scss stylelin">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-11-15T10:16:05.715Z">
+<meta property="article:modified_time" content="2023-11-15T10:41:42.701Z">
+<meta property="article:author" content="Amaoc">
+<meta property="article:tag" content="css">
+<meta property="article:tag" content="stylelint">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://www.amaoc.cn/2023/11/15/stylelint%E5%88%9D%E6%AC%A1%E4%BD%BF%E7%94%A8/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Amaoc" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitment@0.0.3/style/default.min.css">
+  
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body class="main-center theme-purple" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/amaoc" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Amaoc</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Web Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Xiamen, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/amaoc" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a><span class="category-list-count">10</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/" rel="tag">css</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/js/" rel="tag">js</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/stylelint/" rel="tag">stylelint</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/" rel="tag">开发规范</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/css/" style="font-size: 13px;">css</a> <a href="/tags/js/" style="font-size: 14px;">js</a> <a href="/tags/stylelint/" style="font-size: 13px;">stylelint</a> <a href="/tags/%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/" style="font-size: 13px;">开发规范</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a><span class="archive-list-count">10</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/11/17/js%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6/" class="title">js垃圾回收机制</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-11-17T10:32:16.056Z" itemprop="datePublished">2023-11-17</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/11/15/js%E4%B8%AD%E7%9A%84%E6%A0%88%E5%86%85%E5%AD%98%E5%92%8C%E5%A0%86%E5%86%85%E5%AD%98/" class="title">js中的栈内存和堆内存</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-11-15T10:16:33.024Z" itemprop="datePublished">2023-11-15</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/11/15/%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E6%B5%85%E6%8B%B7%E8%B4%9D/" class="title">深拷贝与浅拷贝</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-11-15T10:16:33.015Z" itemprop="datePublished">2023-11-15</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/11/15/js%E4%B8%ADnull%E3%80%81undefined%E6%B5%85%E8%B0%88/" class="title">js中null、undefined浅谈</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-11-15T10:16:21.656Z" itemprop="datePublished">2023-11-15</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/11/15/js%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" class="title">js中的内存管理</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-11-15T10:16:21.608Z" itemprop="datePublished">2023-11-15</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+  <aside class="sidebar sidebar-toc collapse   in  " id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <nav id="toc" class="article-toc">
+      <h3 class="toc-title">文章目录</h3>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#stylelint-%E5%88%9D%E6%AC%A1%E4%BD%BF%E7%94%A8vue"><span class="toc-number">1.</span> <span class="toc-text"> stylelint 初次使用（vue）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">2.</span> <span class="toc-text"> 安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E8%A7%84%E5%88%99"><span class="toc-number">3.</span> <span class="toc-text"> 配置规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE"><span class="toc-number">4.</span> <span class="toc-text"> 配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#rules%E8%A7%84%E5%88%99"><span class="toc-number">5.</span> <span class="toc-text"> rules规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E6%A1%A3"><span class="toc-number">6.</span> <span class="toc-text"> 参考文档</span></a></li></ol>
+    </nav>
+  </div>
+</aside>
+
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-stylelint初次使用" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      stylelint 初次使用（vue）
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2023/11/15/stylelint%E5%88%9D%E6%AC%A1%E4%BD%BF%E7%94%A8/" class="article-date">
+	  <time datetime="2023-11-15T10:16:05.715Z" itemprop="datePublished">2023-11-15</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/css/" rel="tag">css</a>, <a class="article-tag-link-link" href="/tags/stylelint/" rel="tag">stylelint</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2023/11/15/stylelint%E5%88%9D%E6%AC%A1%E4%BD%BF%E7%94%A8/#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 3.8k(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 16(分)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h3 id="stylelint-初次使用vue"><a class="markdownIt-Anchor" href="#stylelint-初次使用vue"></a> stylelint 初次使用（vue）</h3>
+<blockquote>
+<p>很早就知道样式校验了，但是一直都没有去了解，因公司对样式比较关怀，所以特意去研究了一下，效果倍爽。。。</p>
+</blockquote>
+<h3 id="安装"><a class="markdownIt-Anchor" href="#安装"></a> 安装</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yarn add stylelint stylelint-config-standard stylelint-config-rational-order stylelint-order stylelint-scss stylelint-webpack-plugin --save-dev</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">npm install stylelint stylelint-config-standard stylelint-config-rational-order stylelint-order stylelint-scss stylelint-webpack-plugin --save-dev</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>stylelint是运行工具<br />
+stylelint-config-standard(stylelint-config-recommentded)是stylelint的推荐配置<br />
+stylelint-order是css属性排序插件，并且每个规则都支持自动修复（stylelint --fix）<br />
+stylelint-scss引入了特定的scss规则，是stylelint更好的支持scss语法<br />
+stylelint-config-rational-order是stylelint配置，通过按照以下顺序将相关属性声明进行分组来对它们进行排序：</p>
+<ol>
+<li>Positioning；</li>
+<li>Box Model；</li>
+<li>Typography；</li>
+<li>Visual；</li>
+<li>Animation；</li>
+<li>Misc；</li>
+</ol>
+<p>stylelint-webpack-plugin是webpack插件，使用stylelint检查css/scss代码。<br />
+注意：用vue-cli2构建的项目(webpack3.0)，stylelint-wepack-plugin的版本记得选用0.10.5的版本。</p>
+</blockquote>
+<h3 id="配置规则"><a class="markdownIt-Anchor" href="#配置规则"></a> 配置规则</h3>
+<blockquote>
+<p>stylelint配置顺序：</p>
+<blockquote>
+<ol>
+<li>会去找package.json里的stylelint配置</li>
+<li>没有找到package.json的配置，会找.stylelintrc（或者.stylelintrc.json, .stylelintrc.yaml, .stylelintrc.yml, .stylelintrc.js）中的配置</li>
+<li>找stylelint.config.js中的配置</li>
+</ol>
+</blockquote>
+<p>我们一般选用第二个，创建一个.stylelintrc.json文件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;extends&quot;</span>: [<span class="string">&quot;stylelint-config-standard&quot;</span>, <span class="string">&quot;stylelint-config-rational-order&quot;</span>],</span><br><span class="line">  <span class="string">&quot;plugins&quot;</span>: [<span class="string">&quot;stylelint-scss&quot;</span>, <span class="string">&quot;stylelint-order&quot;</span>],</span><br><span class="line">  <span class="string">&quot;rules&quot;</span>: &#123;</span><br><span class="line">    <span class="comment">// 因为开发原因，不可能每个css都给排序，太影响开发效率，所以排序禁用</span></span><br><span class="line">    <span class="string">&quot;no-descending-specificity&quot;</span>: <span class="literal">null</span>,</span><br><span class="line">    <span class="comment">// 因为项目中用到里px2rem，不需要转rem的单位我们都用大写的PX来做单位（注释会被scss-loader及stylelint去掉），所以忽略单位大小写</span></span><br><span class="line">    <span class="string">&quot;unit-case&quot;</span>: <span class="literal">null</span>,</span><br><span class="line">    <span class="comment">// 嵌套层写5层，太少会影响之前项目代码</span></span><br><span class="line">    <span class="string">&quot;max-nesting-depth&quot;</span>: <span class="number">5</span>,</span><br><span class="line">    <span class="string">&quot;order/order&quot;</span>: [</span><br><span class="line">      <span class="string">&quot;custom-properties&quot;</span>,</span><br><span class="line">      <span class="string">&quot;dollar-variables&quot;</span>,</span><br><span class="line">      <span class="string">&quot;declarations&quot;</span>,</span><br><span class="line">      <span class="string">&quot;rules&quot;</span>,</span><br><span class="line">      <span class="string">&quot;at-rules&quot;</span></span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>创建忽略stylelint代码文件，.stylelintignore忽略指定目录或文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/dist/</span><br><span class="line">/test/</span><br><span class="line"></span><br><span class="line">*.min.css</span><br><span class="line"></span><br><span class="line">*.js</span><br><span class="line">*.ts</span><br><span class="line">*.png</span><br><span class="line">*.jpg</span><br><span class="line">*.webp</span><br><span class="line">*.ttf</span><br><span class="line">*.woff</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h3 id="配置"><a class="markdownIt-Anchor" href="#配置"></a> 配置</h3>
+<blockquote>
+<ol>
+<li>使用webpack插件校验.vue文件中的style，在vue.config.js中添加</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">configureWebpack</span>: <span class="function"><span class="params">config</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> <span class="title class_">StyleLintPlugin</span> = <span class="built_in">require</span>(<span class="string">&#x27;stylelint-webpack-plugin&#x27;</span>)</span><br><span class="line">  config.<span class="property">plugins</span>.<span class="title function_">push</span>(</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">StyleLintPlugin</span>(&#123;</span><br><span class="line">      <span class="attr">files</span>: [<span class="string">&#x27;src/**/*.&#123;vue,html,css,scss,sass,less&#125;&#x27;</span>],</span><br><span class="line">      <span class="attr">failOnError</span>: <span class="literal">false</span>,</span><br><span class="line">      <span class="attr">cache</span>: <span class="literal">true</span>,</span><br><span class="line">      <span class="attr">fix</span>: <span class="literal">true</span>,</span><br><span class="line">    &#125;)</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>用vue-cli2构建的项目中，在/build/webpack.prod.conf.js中添加</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">StyleLintPlugin</span> = <span class="built_in">require</span>(<span class="string">&#x27;stylelint-webpack-plugin&#x27;</span>)</span><br><span class="line"><span class="comment">// 在plugins中</span></span><br><span class="line"><span class="keyword">new</span> <span class="title class_">StyleLintPlugin</span>(&#123;</span><br><span class="line">      <span class="string">&#x27;files&#x27;</span>: [<span class="string">&#x27;src/**/*.&#123;vue,css,sass,scss&#125;&#x27;</span>],</span><br><span class="line">      <span class="string">&#x27;fix&#x27;</span>: <span class="literal">true</span>,</span><br><span class="line">      <span class="string">&#x27;cache&#x27;</span>: <span class="literal">true</span>,</span><br><span class="line">      <span class="string">&#x27;emitErrors&#x27;</span>: <span class="literal">true</span>,</span><br><span class="line">      <span class="string">&#x27;failOnError&#x27;</span>: <span class="literal">false</span></span><br><span class="line">    &#125;),</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>stylelint与eslint同时使用git-hooks配置<br />
+在package.json中配置</li>
+</ol>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">   <span class="comment">// ...</span></span><br><span class="line">   <span class="attr">&quot;lint-staged&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">       <span class="attr">&quot;*.&#123;vue,js&#125;&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">           <span class="string">&quot;eslint --fix&quot;</span><span class="punctuation">,</span></span><br><span class="line">           <span class="string">&quot;git add&quot;</span></span><br><span class="line">       <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">       <span class="attr">&quot;*.&#123;html,vue,css,sass,scss&#125;&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">           <span class="string">&quot;stylelint --fix&quot;</span><span class="punctuation">,</span></span><br><span class="line">           <span class="string">&quot;git add&quot;</span><span class="punctuation">,</span></span><br><span class="line">       <span class="punctuation">]</span></span><br><span class="line">   <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">   <span class="attr">&quot;husky&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">       <span class="attr">&quot;hooks&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">           <span class="attr">&quot;pre-commit&quot;</span><span class="punctuation">:</span> <span class="string">&quot;lint-staged&quot;</span><span class="punctuation">,</span></span><br><span class="line">       <span class="punctuation">&#125;</span></span><br><span class="line">   <span class="punctuation">&#125;</span></span><br><span class="line"> <span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<h3 id="rules规则"><a class="markdownIt-Anchor" href="#rules规则"></a> rules规则</h3>
+<blockquote>
+<p>Color<br />
+color-hex-case: 指定大写或小写十六进制的颜色。<br />
+color-hex-length: 指定十六进制颜色长或短的符号。<br />
+color-named: 需要（如果可能）或不允许命名的颜色。<br />
+color-no-hex: 不允许十六进制的颜色。<br />
+color-no-invalid-hex: 禁止无效的十六进制颜色。</p>
+<p>font-family<br />
+font-family-name-quotes:指定是否引号应该围绕字体系列名称中使用。</p>
+<p>function<br />
+function-blacklist:指定不允许的功能黑名单<br />
+function-calc-no-unspaced-operator:计算的函数中禁止的unspaced执行<br />
+function-comma-newline-after:要求一个新行或函数的逗号后禁止空白。<br />
+function-comma-newline-before: 要求一个新行或函数的逗号之前不允许空白。<br />
+function-comma-space-after: 要求一个空格或函数的逗号后禁止空白。<br />
+function-comma-space-before:要求一个空格或函数的逗号前禁止空白。<br />
+function-linear-gradient-no-nonstandard-direction:禁止在线性梯度方向值（），根据标准语法是无效的呼叫。<br />
+function-max-empty-lines: 限制方法中相邻的空行数<br />
+function-name-case: 指定大写或小写的函数名。<br />
+function-parentheses-newline-inside:要求一个新行或函数的括号内不允许空白。<br />
+function-parentheses-space-inside: 要求一个空格或函数的括号内不允许空白。<br />
+function-url-data-uris: 要求或禁止数据的URI的URL<br />
+function-url-no-scheme-relative:不允许文档相对的URL。<br />
+function-url-quotes: 要求或禁止对于网址报价<br />
+function-url-scheme-whitelist: 指定允许URL方案的白名单。<br />
+function-whitelist: 指定允许的功能的白名单。<br />
+function-whitespace-after: 要求方法后不允许空白。</p>
+<p>Number<br />
+number-leading-zero:要求或分数低于1的数字禁止前导零。<br />
+number-max-precision:限制允许的小数位数的数目。<br />
+number-no-trailing-zeros: 禁止在数量尾随零。<br />
+String<br />
+string-no-newline: 禁止在字符串（转义）换行。<br />
+string-quotes: 指定字串，单或双引号。<br />
+Length<br />
+length-zero-no-unit: 禁止单位零长度。<br />
+Time<br />
+time-no-imperceptible: 禁止动画和过渡小于或等于100毫秒。<br />
+Unit<br />
+unit-blacklist: 指定不允许使用单位的黑名单。<br />
+unit-case: 指定大写或小写的单位。<br />
+unit-no-unknown: 禁止未知的单位。<br />
+unit-whitelist: 指定允许单位的白名单&gt;<br />
+Value<br />
+value-keyword-case: 指定大写或小写关键字的值。<br />
+value-no-vendor-prefix: 不允许供应商前缀值。<br />
+Value list<br />
+value-list-comma-newline-after: 逗号后需要一个换行符或不允许空白值列表。<br />
+value-list-comma-newline-before: 逗号前需要一个换行符或不允许空白值列表。<br />
+value-list-comma-space-after: 需要一个空格或者逗号后不允许空白值列表。<br />
+value-list-comma-space-before:需要一个空格或者逗号前不允许空白值列表。<br />
+value-list-max-empty-lines: 限制相邻的数量值列表内空行。<br />
+Custom property<br />
+custom-property-empty-line-before: 自定义属性之前equire或不允许空行。<br />
+custom-property-no-outside-root: 不允许自定义属性以外的:根规则。<br />
+custom-property-pattern: 为自定义属性指定一个模式。<br />
+Shorthand property<br />
+shorthand-property-no-redundant-values:不允许在简写属性冗余值。<br />
+Property<br />
+property-blacklist: 指定一个不允许属性的黑名单。<br />
+property-case: 为属性指定小写或大写。<br />
+property-no-unknown: 不允许未知属性。<br />
+property-no-vendor-prefix: 不允许前缀的属性。<br />
+property-whitelist: 指定一个白名单允许属性。<br />
+Keyframe declaration<br />
+keyframe-declaration-no-important: 不允许!important在关键帧声明。<br />
+Declaration<br />
+declaration-bang-space-after: bang声明之后需要一个空格或者不允许空白<br />
+declaration-bang-space-before: bang声明之前需要一个空格或者不允许空白<br />
+declaration-colon-newline-after: 冒号后的声明需要一个换行符或不允许空白。<br />
+declaration-colon-space-after: 冒号后的声明需要一个空格或不允许空白。<br />
+declaration-colon-space-before: 冒号之前的声明需要一个空格或不允许空白。<br />
+declaration-empty-line-before: 要求声明前不允许空一行。<br />
+declaration-no-important: 不允许!important声明。<br />
+declaration-property-unit-blacklist: 指定一个黑名单内不允许声明属性。<br />
+declaration-property-unit-whitelist: 指定一个白名单内允许声明属性。<br />
+declaration-property-value-blacklist: 指定一个黑名单,不允许在声明属性和值对。<br />
+declaration-property-value-whitelist: 指定一个允许属性和值对声明的白名单。<br />
+Declaration block<br />
+declaration-block-no-duplicate-properties: 不允许复制属性块中声明<br />
+declaration-block-no-ignored-properties:不允许被忽略是因为另一个属性值的属性值相同的规则。<br />
+declaration-block-no-redundant-longhand-properties: 不允许手写属性,可以组合成一个简写属性。<br />
+declaration-block-no-shorthand-property-overrides: 不允许简写属性覆盖相关手写属性声明块。<br />
+declaration-block-properties-order: 声明块中指定的顺序属性。<br />
+declaration-block-semicolon-newline-after: 要求一个换行符或不允许空白块分号后。<br />
+declaration-block-semicolon-newline-before: 要求一个换行符或不允许空白块分号之前的声明。<br />
+declaration-block-semicolon-space-after: 要求一个空间或不允许空白块分号后的声明。<br />
+declaration-block-semicolon-space-before: 要求一个空间或不允许空白块分号之前的声明<br />
+declaration-block-single-line-max-declarations: 限制声明在一行声明块的数量<br />
+declaration-block-trailing-semicolon: 要求或不允许在声明块后面的分号。<br />
+Block<br />
+block-closing-brace-empty-line-before: 要求或不允许关闭括号前空一行。<br />
+block-closing-brace-newline-after: 需要一个换行符或不允许关闭括号后的空白。<br />
+block-closing-brace-newline-before: 需要一个换行符或不允许空白关闭括号前的块。<br />
+block-closing-brace-space-after: 需要一个空间或不允许关闭括号后的空白块。<br />
+block-closing-brace-space-before: 在关闭括号前的块需要一个空格或者不允许空白。<br />
+block-no-empty: 不允许空块<br />
+block-no-single-line: 不允许单行块<br />
+block-opening-brace-newline-after: 开括号的块之后需要新的一行。<br />
+block-opening-brace-newline-before: 开括号的块之后需要一个换行符或不允许空白<br />
+block-opening-brace-space-after: 开括号的块之后需要一个空格或不允许空白。<br />
+block-opening-brace-space-before: 开括号的块之前需要一个空格或不允许空白。<br />
+Selector<br />
+selector-attribute-brackets-space-inside: 在括号里的属性选择器需要一个空格或者不允许空白。<br />
+selector-attribute-operator-blacklist: 指定一个黑名单不允许属性的操作符。<br />
+selector-attribute-operator-space-after: 需要一个空间或不允许空格后运营商在属性选择器。<br />
+selector-attribute-operator-space-before: 需要一个空间或不允许空格内运营商之前属性选择器。<br />
+selector-attribute-operator-whitelist: 指定一个属性允许运营商的白名单。<br />
+selector-attribute-quotes: 需要或不允许引用属性值。<br />
+selector-class-pattern: 指定一个模式类选择符。<br />
+selector-combinator-space-after: 需要一个空间或不允许空格后的组合子选择器。<br />
+selector-combinator-space-before: 需要一个空间或不允许空格前的组合子选择器。<br />
+selector-descendant-combinator-no-non-space: 不允许的字符的后代组合子选择器进行技术改造。<br />
+selector-id-pattern: 指定一个模式,id选择器。<br />
+selector-max-compound-selectors: 在一个选择器里面限制复合选择器的数量。<br />
+selector-max-specificity: 限制的特异性选择器。<br />
+selector-nested-pattern: 指定一个模式选择器的规则嵌套规则。<br />
+selector-no-attribute: 不允许属性选择器。<br />
+selector-no-combinator: 不允许在选择器组合。<br />
+selector-no-id: 不允许id选择器。<br />
+selector-no-qualifying-type: 不允许符合条件的选择器的类型。<br />
+selector-no-type: 不允许类型选择器。<br />
+selector-no-universal: Disallow the universal selector.<br />
+selector-no-vendor-prefix: 不允许选择器的前缀。<br />
+selector-pseudo-class-blacklist: 指定一个黑名单禁止伪类选择器。<br />
+selector-pseudo-class-case: 为伪类选择器指定小写或大写。<br />
+selector-pseudo-class-no-unknown: 不允许未知的伪类选择器。<br />
+selector-pseudo-class-parentheses-space-inside: 需要一个空格或不允许空格在括号里面的伪类选择器。<br />
+selector-pseudo-class-whitelist: 伪类选择器允许指定一个白名单。<br />
+selector-pseudo-element-case: 为伪元素选择器指定小写或大写。<br />
+selector-pseudo-element-colon-notation: 为适用的伪元素指定单引号或双冒号符号。<br />
+selector-pseudo-element-no-unknown: 不允许未知的伪元素选择器。<br />
+selector-root-no-composition: 在选择器不允许根的构成。<br />
+selector-type-case: 指定小写或大写类型选择器。<br />
+selector-type-no-unknown: 不允许未知类型选择器。<br />
+selector-max-empty-lines: 限制内相邻的空行选择器的数量。<br />
+Selector list<br />
+selector-list-comma-newline-after: 需要一个换行符或不允许空白选择逗号后的列表。<br />
+selector-list-comma-newline-before: 逗号前需要一个换行符或不允许空白选择器列表。<br />
+selector-list-comma-space-after: 需要一个空格或者逗号后不允许空格选择器列表。<br />
+selector-list-comma-space-before: 需要一个空格或者逗号前不允许空格选择器列表。<br />
+Root rule<br />
+root-no-standard-properties: 根规则内不允许标准属性。<br />
+Rule<br />
+rule-nested-empty-line-before: 需要或不允许嵌套规则前空一行。<br />
+rule-non-nested-empty-line-before: 需要或不允许non-nested规则前空一行。<br />
+Media feature<br />
+media-feature-colon-space-after: 需要一个空间或不允许空格在冒号之后媒体的特性。<br />
+media-feature-colon-space-before: 需要一个空间或不允许空格在冒号之前媒体的特性。<br />
+media-feature-name-case: 为媒体特性名称指定小写或大写。<br />
+media-feature-name-no-unknown: 不允许未知的媒体功能的名字。<br />
+media-feature-name-no-vendor-prefix: 不允许媒体特性名称的前缀。<br />
+media-feature-no-missing-punctuation: 不允许标点non-boolean媒体功能<br />
+media-feature-parentheses-space-inside: 需要一个空间或不允许空格在括号里面的媒体功能。<br />
+media-feature-range-operator-space-after: 需要一个空间或不允许空白范围运算符后媒体的特性。<br />
+media-feature-range-operator-space-before: 之前需要一个空间或不允许空格符范围在媒体功能。<br />
+Custom media<br />
+custom-media-pattern: 为定制媒体查询名称指定一个模式。<br />
+Media query list<br />
+media-query-list-comma-newline-after: 需要一个换行符或不允许空格后媒体查询的逗号分隔列表。<br />
+media-query-list-comma-newline-before: 需要一个换行符或不允许空格之前媒体查询的逗号分隔列表<br />
+media-query-list-comma-space-after: 需要一个空间或不允许空格后媒体查询的逗号分隔列表。<br />
+media-query-list-comma-space-before:需要一个空间或不允许空格之前媒体查询的逗号分隔列表。<br />
+At-rule<br />
+at-rule-blacklist: 不允许at-rules指定一个黑名单。<br />
+at-rule-empty-line-before: 需要或不允许at-rules前空一行。<br />
+at-rule-name-case: 指定at-rules小写或大写的名字。<br />
+at-rule-name-newline-after: at-rule名称后需要一个换行符。<br />
+at-rule-name-space-after: 需要一个空格后at-rule名称。<br />
+at-rule-no-unknown: 不允许at-rules不明。<br />
+at-rule-no-vendor-prefix: 不允许at-rules前缀。<br />
+at-rule-semicolon-newline-after: 需要一个换行符之后at-rules的分号。<br />
+at-rule-whitelist: 指定允许at-rules的白名单。<br />
+stylelint-disable comment<br />
+stylelint-disable-reason: 需要一个理由stylelint-disable之前或之后的评论发表评论。<br />
+Comment<br />
+comment-empty-line-before: 需要或不允许评论之前一个空行。<br />
+comment-no-empty: 不允许空的评论。<br />
+comment-whitespace-inside:需要或不允许空格里面的注释标记。<br />
+comment-word-blacklist: 指定一个黑名单内不允许的话评论。<br />
+General / Sheet<br />
+indentation: 指定缩进。<br />
+max-empty-lines: 限制数量的相邻的空行。<br />
+max-line-length: 限制线的长度。<br />
+max-nesting-depth: 限制的深度嵌套。<br />
+no-browser-hacks: 不允许浏览器黑客,无关你目标的浏览器。<br />
+no-descending-specificity: 不允许选择器之后覆盖选择器的低特异性更高的特异性。<br />
+no-duplicate-selectors: 不允许重复的选择器。<br />
+no-empty-source: 不允许空的来源。<br />
+no-eol-whitespace: 不允许行尾空白。<br />
+no-extra-semicolons: 不允许额外的分号。<br />
+no-indistinguishable-colors: 不允许产品极其接近的颜色相同。<br />
+no-invalid-double-slash-comments: 不允许双斜杠注释(/ /…)不支持CSS。<br />
+no-missing-end-of-source-newline: 不允许丢失end-of-source换行。<br />
+no-unknown-animations: 不允许动画名称不对应@keyframes声明。<br />
+no-unsupported-browser-features: 不允许功能的浏览器不支持的目标</p>
+</blockquote>
+<h3 id="参考文档"><a class="markdownIt-Anchor" href="#参考文档"></a> 参考文档</h3>
+<blockquote>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/lfcss/article/details/82787113">stylelint rules</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_42606051/article/details/85987840">如何为你的 Vue 项目添加配置 Stylelint</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/huliang56/p/11933938.html">使用stylelint进行Vue项目样式检查</a></li>
+<li><a target="_blank" rel="noopener" href="https://stylelint.io/">stylelint官网</a></li>
+</ol>
+</blockquote>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://www.amaoc.cn/2023/11/15/stylelint%E5%88%9D%E6%AC%A1%E4%BD%BF%E7%94%A8/" title="stylelint 初次使用（vue）" target="_blank" rel="external">http://www.amaoc.cn/2023/11/15/stylelint初次使用/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/amaoc" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/amaoc" target="_blank"><span class="text-dark">Amaoc</span><small class="ml-1x">Web Developer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2023/11/15/js%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" title="js中的内存管理"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2023/11/15/js%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/" title="js的原型和原型链"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+    <li class="toggle-toc">
+      <a class="toggle-btn " data-toggle="collapse" href="#collapseToc" aria-expanded="false" title="文章目录" role="button">    <span>[&nbsp;</span><span>文章目录</span>
+        <i class="text-collapsed icon icon-anchor"></i>
+        <i class="text-in icon icon-close"></i>
+        <span>]</span>
+      </a>
+    </li>
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/amaoc" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+<script src="//cdn.jsdelivr.net/npm/gitment@0.0.3/dist/gitment.browser.min.js"></script>
+<script>
+var gitment = new Gitment({
+  // id默认为当前页面url，如果url后带参数或锚点，gitment要重新初始化
+  // https://github.com/imsun/gitment/issues/55
+  // 解决方案：id:window.location.pathname,或者将id设置为当前页面标题
+  id: 'stylelint 初次使用（vue）', 
+  owner: '', // 可以是你的GitHub用户名，也可以是github id
+  repo: '',
+  oauth: {
+    client_id: '',
+    client_secret: '',
+  }
+})
+gitment.render('comments')
+</script>
+
+
+
+
+
+
+
+
+
+</body>
+</html>

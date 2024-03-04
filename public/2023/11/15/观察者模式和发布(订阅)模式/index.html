@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>观察者模式和发布-订阅模式 | Amaoc</title>
+  <meta name="description" content="观察者模式和发布&#x2F;订阅模式   观察者模式 目标和观察者是基类，目标提供维护观察者的一系列方法，观察者提供更新接口。具体观察者和具体目标继承各自的基类，然后具体观察者把自己注册到具体目标里，在具体目标发生变化时候，调度观察者的更新方法。  观察者模式实现代码 123456789101112131415161718192021222324252627282930313233343536373839">
+<meta property="og:type" content="article">
+<meta property="og:title" content="观察者模式和发布-订阅模式">
+<meta property="og:url" content="http://www.amaoc.cn/2023/11/15/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F%E5%92%8C%E5%8F%91%E5%B8%83(%E8%AE%A2%E9%98%85)%E6%A8%A1%E5%BC%8F/index.html">
+<meta property="og:site_name" content="Amaoc">
+<meta property="og:description" content="观察者模式和发布&#x2F;订阅模式   观察者模式 目标和观察者是基类，目标提供维护观察者的一系列方法，观察者提供更新接口。具体观察者和具体目标继承各自的基类，然后具体观察者把自己注册到具体目标里，在具体目标发生变化时候，调度观察者的更新方法。  观察者模式实现代码 123456789101112131415161718192021222324252627282930313233343536373839">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.amaoc.cn/imgs/1.png">
+<meta property="og:image" content="http://www.amaoc.cn/imgs/2.png">
+<meta property="article:published_time" content="2023-11-15T10:16:05.659Z">
+<meta property="article:modified_time" content="2023-11-15T10:41:06.572Z">
+<meta property="article:author" content="Amaoc">
+<meta property="article:tag" content="js">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://www.amaoc.cn/imgs/1.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://www.amaoc.cn/2023/11/15/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F%E5%92%8C%E5%8F%91%E5%B8%83(%E8%AE%A2%E9%98%85)%E6%A8%A1%E5%BC%8F/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Amaoc" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitment@0.0.3/style/default.min.css">
+  
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body class="main-center theme-purple" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/amaoc" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Amaoc</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Web Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Xiamen, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/amaoc" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a><span class="category-list-count">10</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/" rel="tag">css</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/js/" rel="tag">js</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/stylelint/" rel="tag">stylelint</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/" rel="tag">开发规范</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/css/" style="font-size: 13px;">css</a> <a href="/tags/js/" style="font-size: 14px;">js</a> <a href="/tags/stylelint/" style="font-size: 13px;">stylelint</a> <a href="/tags/%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/" style="font-size: 13px;">开发规范</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a><span class="archive-list-count">10</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/11/17/js%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6/" class="title">js垃圾回收机制</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-11-17T10:32:16.056Z" itemprop="datePublished">2023-11-17</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/11/15/js%E4%B8%AD%E7%9A%84%E6%A0%88%E5%86%85%E5%AD%98%E5%92%8C%E5%A0%86%E5%86%85%E5%AD%98/" class="title">js中的栈内存和堆内存</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-11-15T10:16:33.024Z" itemprop="datePublished">2023-11-15</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/11/15/%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E6%B5%85%E6%8B%B7%E8%B4%9D/" class="title">深拷贝与浅拷贝</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-11-15T10:16:33.015Z" itemprop="datePublished">2023-11-15</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/11/15/js%E4%B8%ADnull%E3%80%81undefined%E6%B5%85%E8%B0%88/" class="title">js中null、undefined浅谈</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-11-15T10:16:21.656Z" itemprop="datePublished">2023-11-15</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/11/15/js%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" class="title">js中的内存管理</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-11-15T10:16:21.608Z" itemprop="datePublished">2023-11-15</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+  <aside class="sidebar sidebar-toc collapse   in  " id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <nav id="toc" class="article-toc">
+      <h3 class="toc-title">文章目录</h3>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F%E5%92%8C%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text"> 观察者模式和发布&#x2F;订阅模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.1.</span> <span class="toc-text"> 观察者模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.2.</span> <span class="toc-text"> 发布&#x2F;订阅模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E6%A1%A3"><span class="toc-number">1.3.</span> <span class="toc-text"> 参考文档</span></a></li></ol></li></ol>
+    </nav>
+  </div>
+</aside>
+
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-观察者模式和发布(订阅)模式" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      观察者模式和发布-订阅模式
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2023/11/15/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F%E5%92%8C%E5%8F%91%E5%B8%83(%E8%AE%A2%E9%98%85)%E6%A8%A1%E5%BC%8F/" class="article-date">
+	  <time datetime="2023-11-15T10:16:05.659Z" itemprop="datePublished">2023-11-15</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/js/" rel="tag">js</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2023/11/15/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F%E5%92%8C%E5%8F%91%E5%B8%83(%E8%AE%A2%E9%98%85)%E6%A8%A1%E5%BC%8F/#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 597(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 2(分)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h2 id="观察者模式和发布订阅模式"><a class="markdownIt-Anchor" href="#观察者模式和发布订阅模式"></a> 观察者模式和发布/订阅模式</h2>
+<blockquote>
+<h3 id="观察者模式"><a class="markdownIt-Anchor" href="#观察者模式"></a> 观察者模式</h3>
+<p>目标和观察者是基类，目标提供维护观察者的一系列方法，观察者提供更新接口。具体观察者和具体目标继承各自的基类，然后具体观察者把自己注册到具体目标里，在具体目标发生变化时候，调度观察者的更新方法。<br />
+<img src="/imgs/1.png" alt="观察者模式" /><br />
+观察者模式实现代码</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. 观察者列表</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">ObserverList</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">observerList</span> = [];</span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">ObserverList</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">add</span> = <span class="keyword">function</span>(<span class="params">obj</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">observerList</span>.<span class="title function_">push</span>(obj);</span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">ObserverList</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">count</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">observerList</span>.<span class="property">length</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">ObserverList</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">get</span> = <span class="keyword">function</span>(<span class="params">index</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span>(index &gt; -<span class="number">1</span> &amp;&amp; index &lt; <span class="variable language_">this</span>.<span class="property">observerList</span>.<span class="property">length</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">observerList</span>[index];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">ObserverList</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">indexOf</span> = <span class="keyword">function</span>(<span class="params">obj, startIndex</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> i = startIndex || <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">while</span>(i &lt; <span class="variable language_">this</span>.<span class="property">observerList</span>.<span class="property">length</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="variable language_">this</span>.<span class="property">observerList</span>[i] === obj) &#123;</span><br><span class="line">      <span class="keyword">return</span> i</span><br><span class="line">    &#125;</span><br><span class="line">    i++;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">ObserverList</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">removeAt</span> = <span class="keyword">function</span>(<span class="params">index</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">observerList</span>.<span class="title function_">splice</span>(index, <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2.目标</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Subject</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">observers</span> = <span class="keyword">new</span> <span class="title class_">ObserverList</span>();</span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">Subject</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">addObserver</span> = <span class="keyword">function</span>(<span class="params">observer</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">observers</span>.<span class="title function_">add</span>(observer);</span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">Subject</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">removeObserver</span> = <span class="keyword">function</span>(<span class="params">observer</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">observers</span>.<span class="title function_">removeAt</span>(<span class="variable language_">this</span>.<span class="property">observers</span>.<span class="title function_">indexOf</span>(observer, <span class="number">0</span>));</span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">Subject</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">notify</span> = <span class="keyword">function</span>(<span class="params">context</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> observerCount = <span class="variable language_">this</span>.<span class="property">observers</span>.<span class="title function_">count</span>();</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; observerCount; i++) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">observers</span>.<span class="title function_">get</span>(i).<span class="title function_">update</span>(context);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3.观察者</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Observer</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">update</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用范例</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// html </span></span><br><span class="line"><span class="comment">// &lt;button id=&quot;addNewObjserver&quot;&gt;add New Observer checkBox&lt;/button&gt;</span></span><br><span class="line"><span class="comment">// </span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<h3 id="发布订阅模式"><a class="markdownIt-Anchor" href="#发布订阅模式"></a> 发布/订阅模式</h3>
+<p>订阅者把自己想订阅的事件注册到调度中心，当该事件触发的时候，发布者发布该事件到调度中心，由调度中心同意调度订阅者注册到调度中心的处理代码。<br />
+<img src="/imgs/2.png" alt="发布/订阅模式" /><br />
+发布/订阅模式实现代码</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> pubsub = &#123;&#125;;</span><br><span class="line">(<span class="keyword">function</span>(<span class="params">myObject</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> topics = &#123;&#125;;</span><br><span class="line">  <span class="keyword">var</span> subUid = -<span class="number">1</span>;</span><br><span class="line">  myObject.<span class="property">publish</span> = <span class="keyword">function</span>(<span class="params">topic, args</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span>(!topics[topic]) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> subscribers = topics[topic];</span><br><span class="line">    <span class="keyword">var</span> len = subscribers ? subscribers.<span class="property">length</span> : <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (len--) &#123;</span><br><span class="line">      subscribers[len].<span class="title function_">func</span>(topic, func);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>;</span><br><span class="line">  &#125;;</span><br><span class="line">  myObject.<span class="property">subscribe</span> = <span class="keyword">function</span>(<span class="params">topic, func</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span>(!topics[topic]) &#123;</span><br><span class="line">      topics[topic] = [];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> token = (++subUid).<span class="title function_">toString</span>();</span><br><span class="line">    topics[topic].<span class="title function_">push</span>(&#123;</span><br><span class="line">      <span class="attr">token</span>: token,</span><br><span class="line">      <span class="attr">func</span>: func</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> token;</span><br><span class="line">  &#125;</span><br><span class="line">  myObject.<span class="property">unsubscribe</span> = <span class="keyword">function</span>(<span class="params">token</span>) &#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> m <span class="keyword">in</span> topics) &#123;</span><br><span class="line">      <span class="keyword">if</span>(topics[m]) &#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>, j = topics[m].<span class="property">length</span>; i &lt; j; i++) &#123;</span><br><span class="line">          <span class="keyword">if</span>(topics[m][i].<span class="property">token</span> === token) &#123;</span><br><span class="line">            topics[m].<span class="title function_">splice</span>(i, <span class="number">1</span>);</span><br><span class="line">            <span class="keyword">return</span> token;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)(pubsub)</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<h3 id="参考文档"><a class="markdownIt-Anchor" href="#参考文档"></a> 参考文档</h3>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/594f018b68e7">观察者模式和发布订阅模式的区别</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/9f2c8ae57cac">设计模式学习之观察者模式和发布订阅模式</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/lovesong/p/5272752.html">观察者模式与发布/订阅模式区别</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/2f94d7596522">JS设计模式2-发布／订阅模式和观察者模式</a></li>
+</ol>
+</blockquote>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://www.amaoc.cn/2023/11/15/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F%E5%92%8C%E5%8F%91%E5%B8%83(%E8%AE%A2%E9%98%85)%E6%A8%A1%E5%BC%8F/" title="观察者模式和发布-订阅模式" target="_blank" rel="external">http://www.amaoc.cn/2023/11/15/观察者模式和发布(订阅)模式/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/amaoc" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/amaoc" target="_blank"><span class="text-dark">Amaoc</span><small class="ml-1x">Web Developer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2023/11/15/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/" title="前端开发规范"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    
+    <li class="toggle-toc">
+      <a class="toggle-btn " data-toggle="collapse" href="#collapseToc" aria-expanded="false" title="文章目录" role="button">    <span>[&nbsp;</span><span>文章目录</span>
+        <i class="text-collapsed icon icon-anchor"></i>
+        <i class="text-in icon icon-close"></i>
+        <span>]</span>
+      </a>
+    </li>
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/amaoc" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+<script src="//cdn.jsdelivr.net/npm/gitment@0.0.3/dist/gitment.browser.min.js"></script>
+<script>
+var gitment = new Gitment({
+  // id默认为当前页面url，如果url后带参数或锚点，gitment要重新初始化
+  // https://github.com/imsun/gitment/issues/55
+  // 解决方案：id:window.location.pathname,或者将id设置为当前页面标题
+  id: '观察者模式和发布-订阅模式', 
+  owner: '', // 可以是你的GitHub用户名，也可以是github id
+  repo: '',
+  oauth: {
+    client_id: '',
+    client_secret: '',
+  }
+})
+gitment.render('comments')
+</script>
+
+
+
+
+
+
+
+
+
+</body>
+</html>

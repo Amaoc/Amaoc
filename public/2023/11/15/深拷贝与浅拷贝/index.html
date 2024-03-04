@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>深拷贝与浅拷贝 | Amaoc</title>
+  <meta name="description" content="深拷贝与浅拷贝  如何区分深拷贝和浅拷贝 1234假设B复制了A;当修改了A时，看B是否会发生变化;如果B也跟着变了，说明这是浅拷贝;如果B没变，那就是深拷贝。  基本数据与复杂（引用）数据 12基本数据类型：number,string,boolean,null,undefined,symbol(ES6),BigInt(ES10);  引用数据类型：Object,Array,function">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深拷贝与浅拷贝">
+<meta property="og:url" content="http://www.amaoc.cn/2023/11/15/%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E6%B5%85%E6%8B%B7%E8%B4%9D/index.html">
+<meta property="og:site_name" content="Amaoc">
+<meta property="og:description" content="深拷贝与浅拷贝  如何区分深拷贝和浅拷贝 1234假设B复制了A;当修改了A时，看B是否会发生变化;如果B也跟着变了，说明这是浅拷贝;如果B没变，那就是深拷贝。  基本数据与复杂（引用）数据 12基本数据类型：number,string,boolean,null,undefined,symbol(ES6),BigInt(ES10);  引用数据类型：Object,Array,function">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.amaoc.cn/imgs/1.jpg">
+<meta property="og:image" content="http://www.amaoc.cn/imgs/2.jpg">
+<meta property="og:image" content="http://www.amaoc.cn/imgs/3.jpg">
+<meta property="og:image" content="http://www.amaoc.cn/imgs/4.jpg">
+<meta property="og:image" content="http://www.amaoc.cn/imgs/5.jpg">
+<meta property="og:image" content="http://www.amaoc.cn/imgs/6.jpg">
+<meta property="article:published_time" content="2023-11-15T10:16:33.015Z">
+<meta property="article:modified_time" content="2023-11-15T10:41:16.625Z">
+<meta property="article:author" content="Amaoc">
+<meta property="article:tag" content="js">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://www.amaoc.cn/imgs/1.jpg">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://www.amaoc.cn/2023/11/15/%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E6%B5%85%E6%8B%B7%E8%B4%9D/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Amaoc" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitment@0.0.3/style/default.min.css">
+  
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body class="main-center theme-purple" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/amaoc" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Amaoc</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Web Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Xiamen, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/amaoc" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a><span class="category-list-count">10</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/" rel="tag">css</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/js/" rel="tag">js</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/stylelint/" rel="tag">stylelint</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/" rel="tag">开发规范</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/css/" style="font-size: 13px;">css</a> <a href="/tags/js/" style="font-size: 14px;">js</a> <a href="/tags/stylelint/" style="font-size: 13px;">stylelint</a> <a href="/tags/%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/" style="font-size: 13px;">开发规范</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a><span class="archive-list-count">10</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/11/17/js%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6/" class="title">js垃圾回收机制</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-11-17T10:32:16.056Z" itemprop="datePublished">2023-11-17</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/11/15/js%E4%B8%AD%E7%9A%84%E6%A0%88%E5%86%85%E5%AD%98%E5%92%8C%E5%A0%86%E5%86%85%E5%AD%98/" class="title">js中的栈内存和堆内存</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-11-15T10:16:33.024Z" itemprop="datePublished">2023-11-15</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/11/15/%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E6%B5%85%E6%8B%B7%E8%B4%9D/" class="title">深拷贝与浅拷贝</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-11-15T10:16:33.015Z" itemprop="datePublished">2023-11-15</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/11/15/js%E4%B8%ADnull%E3%80%81undefined%E6%B5%85%E8%B0%88/" class="title">js中null、undefined浅谈</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-11-15T10:16:21.656Z" itemprop="datePublished">2023-11-15</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/11/15/js%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" class="title">js中的内存管理</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-11-15T10:16:21.608Z" itemprop="datePublished">2023-11-15</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+  <aside class="sidebar sidebar-toc collapse   in  " id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <nav id="toc" class="article-toc">
+      <h3 class="toc-title">文章目录</h3>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E6%B5%85%E6%8B%B7%E8%B4%9D"><span class="toc-number">1.</span> <span class="toc-text"> 深拷贝与浅拷贝</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%8C%BA%E5%88%86%E6%B7%B1%E6%8B%B7%E8%B4%9D%E5%92%8C%E6%B5%85%E6%8B%B7%E8%B4%9D"><span class="toc-number">1.1.</span> <span class="toc-text"> 如何区分深拷贝和浅拷贝</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%A4%8D%E6%9D%82%E5%BC%95%E7%94%A8%E6%95%B0%E6%8D%AE"><span class="toc-number">1.2.</span> <span class="toc-text"> 基本数据与复杂（引用）数据</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%90%8D%E5%80%BC%E5%AD%98%E5%82%A8%E5%9C%A8%E6%A0%88%E5%86%85%E5%AD%98%E4%B8%AD"><span class="toc-number">1.2.1.</span> <span class="toc-text"> 1.基本数据类型名值存储在栈内存中</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E5%BC%95%E7%94%A8%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%90%8D%E5%AD%98%E5%9C%A8%E6%A0%88%E5%86%85%E5%AD%98%E4%B8%AD%E8%80%8C%E5%80%BC%E5%8D%B4%E5%AD%98%E5%9C%A8%E4%BA%8E%E5%A0%86%E5%86%85%E5%AD%98%E4%B8%AD%E6%A0%88%E5%86%85%E5%AD%98%E4%BC%9A%E6%8F%90%E4%BE%9B%E4%B8%80%E4%B8%AA%E5%BC%95%E7%94%A8%E7%9A%84%E5%9C%B0%E5%9D%80%E6%8C%87%E5%90%91%E5%A0%86%E5%86%85%E5%AD%98%E4%B8%AD%E7%9A%84%E5%80%BC"><span class="toc-number">1.2.2.</span> <span class="toc-text"> 2.引用数据类型名存在栈内存中，而值却存在于堆内存中，栈内存会提供一个引用的地址指向堆内存中的值</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E6%B5%85%E6%8B%B7%E8%B4%9D"><span class="toc-number">1.3.</span> <span class="toc-text"> 如何实现浅拷贝</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E6%B7%B1%E6%8B%B7%E8%B4%9D"><span class="toc-number">1.4.</span> <span class="toc-text"> 如何实现深拷贝</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E6%A1%88"><span class="toc-number">1.5.</span> <span class="toc-text"> 参考文案</span></a></li></ol></li></ol>
+    </nav>
+  </div>
+</aside>
+
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-深拷贝与浅拷贝" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      深拷贝与浅拷贝
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2023/11/15/%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E6%B5%85%E6%8B%B7%E8%B4%9D/" class="article-date">
+	  <time datetime="2023-11-15T10:16:33.015Z" itemprop="datePublished">2023-11-15</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/js/" rel="tag">js</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2023/11/15/%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E6%B5%85%E6%8B%B7%E8%B4%9D/#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 771(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 3(分)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h1 id="深拷贝与浅拷贝"><a class="markdownIt-Anchor" href="#深拷贝与浅拷贝"></a> 深拷贝与浅拷贝</h1>
+<h2 id="如何区分深拷贝和浅拷贝"><a class="markdownIt-Anchor" href="#如何区分深拷贝和浅拷贝"></a> 如何区分深拷贝和浅拷贝</h2>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">假设B复制了A;</span><br><span class="line">当修改了A时，看B是否会发生变化;</span><br><span class="line">如果B也跟着变了，说明这是浅拷贝;</span><br><span class="line">如果B没变，那就是深拷贝。</span><br></pre></td></tr></table></figure>
+<h2 id="基本数据与复杂引用数据"><a class="markdownIt-Anchor" href="#基本数据与复杂引用数据"></a> 基本数据与复杂（引用）数据</h2>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">基本数据类型：number,string,boolean,null,undefined,symbol(ES6),BigInt(ES10);  </span><br><span class="line">引用数据类型：Object,Array,function</span><br></pre></td></tr></table></figure>
+<h3 id="1基本数据类型名值存储在栈内存中"><a class="markdownIt-Anchor" href="#1基本数据类型名值存储在栈内存中"></a> 1.基本数据类型名值存储在栈内存中</h3>
+<p>例如： let a = 1;<br />
+<img src="/imgs/1.jpg" alt="图片" /></p>
+<p>当你b=a复制时，栈内存会新开辟一个内存<br />
+<img src="/imgs/2.jpg" alt="图片" /></p>
+<p>所以当你此时修改a=2时，对b并不会对a造成影响，所以深拷贝本身只针对较为复杂的引用数据类型。</p>
+<h3 id="2引用数据类型名存在栈内存中而值却存在于堆内存中栈内存会提供一个引用的地址指向堆内存中的值"><a class="markdownIt-Anchor" href="#2引用数据类型名存在栈内存中而值却存在于堆内存中栈内存会提供一个引用的地址指向堆内存中的值"></a> 2.引用数据类型名存在栈内存中，而值却存在于堆内存中，栈内存会提供一个引用的地址指向堆内存中的值</h3>
+<p>例如： let a = [0,1,2,3,4]<br />
+<img src="/imgs/3.jpg" alt="图片" /></p>
+<p>当b=a进行拷贝时，其实复制的是a的引用地址，而并非是堆内存里面的值<br />
+<img src="/imgs/4.jpg" alt="图片" /></p>
+<p>而当我们修改a[0]=1时，由于a与b指向的是同一个地址，所以自然b也受到了影响，这就是浅拷贝了。<br />
+<img src="/imgs/5.jpg" alt="图片" /></p>
+<p>那么，我们如何在堆内存中也开辟一个新的内存专门为b存放值，就像基本类型一样，就能达到深拷贝了。<br />
+<img src="/imgs/6.jpg" alt="图片" /></p>
+<h2 id="如何实现浅拷贝"><a class="markdownIt-Anchor" href="#如何实现浅拷贝"></a> 如何实现浅拷贝</h2>
+<ol>
+<li>for…in只循环第一层</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 只复制第一层的浅拷贝</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">simpleCopy</span>(<span class="params">obj1</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> obj2 = <span class="title class_">Array</span>.<span class="title function_">isArray</span>(obj1)?[]:&#123;&#125;;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i <span class="keyword">in</span> obj1) &#123;</span><br><span class="line">    obj2[i] = obj1[i]</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> obj2;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj1 = &#123;<span class="attr">a</span>: <span class="number">1</span>, <span class="attr">b</span>: <span class="number">2</span>, <span class="attr">c</span>: &#123; <span class="attr">d</span>: <span class="number">3</span>&#125;&#125;;</span><br><span class="line"><span class="keyword">var</span> obj2 = <span class="title function_">simpleCopy</span>(obj1);</span><br><span class="line">obj2.<span class="property">a</span> = <span class="number">3</span>;</span><br><span class="line">obj2.<span class="property">c</span>.<span class="property">d</span> = <span class="number">4</span>;</span><br><span class="line"><span class="comment">// # obj1.a       1;</span></span><br><span class="line"><span class="comment">// # obj2.a       3;</span></span><br><span class="line"><span class="comment">// # obj1.c.d     4;</span></span><br><span class="line"><span class="comment">// # obj2.c.d     4;</span></span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>Object.assign</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;<span class="attr">a</span>: <span class="number">1</span>, <span class="attr">b</span>: <span class="number">2</span>&#125;</span><br><span class="line"><span class="keyword">var</span> obj1 = <span class="title class_">Object</span>.<span class="title function_">assign</span>(&#123;&#125;, obj);</span><br><span class="line"></span><br><span class="line">obj1.<span class="property">a</span> = <span class="number">3</span>;</span><br><span class="line"><span class="comment">// # obj.a       1;</span></span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>直接用=赋值</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a = [<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>];</span><br><span class="line"><span class="keyword">let</span> b = a;</span><br><span class="line"></span><br><span class="line"><span class="comment">// # a === b       true;</span></span><br><span class="line">a[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line"><span class="comment">// # b[0]        1;</span></span><br></pre></td></tr></table></figure>
+<h2 id="如何实现深拷贝"><a class="markdownIt-Anchor" href="#如何实现深拷贝"></a> 如何实现深拷贝</h2>
+<ol>
+<li>采用递归去拷贝所以层级属性</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">deepClone</span> (obj) &#123;</span><br><span class="line">  <span class="keyword">let</span> objClone = <span class="title class_">Array</span>.<span class="title function_">isArray</span>(obj) ? [] : &#123;&#125;;</span><br><span class="line">  <span class="keyword">if</span>(obj &amp;&amp; <span class="keyword">typeof</span> obj === <span class="string">&#x27;object&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">in</span> obj) &#123;</span><br><span class="line">      <span class="keyword">if</span>(obj.<span class="title function_">hasOwnProperty</span>(key)) &#123;</span><br><span class="line">        <span class="comment">// # 判断obj子元素是否为对象，如果是，递归复制</span></span><br><span class="line">        <span class="keyword">if</span>(obj[key] &amp;&amp; type obj[key] === <span class="string">&#x27;object&#x27;</span>) &#123;</span><br><span class="line">          objClone[key] = <span class="title function_">deepClone</span>(obj[key]);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          <span class="comment">// # 如果不是，简单复制</span></span><br><span class="line">          objClone[key] = obj[key];</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> objClone;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> a = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>];</span><br><span class="line"><span class="keyword">let</span> b = <span class="title function_">deepClone</span>(a);</span><br><span class="line">a[<span class="number">0</span>] = <span class="number">2</span>;</span><br><span class="line"><span class="comment">// # b[0]   1;</span></span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>通过JSON对象来实现深拷贝</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">deepClone2</span> (obj) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="title class_">JSON</span>.<span class="title function_">parse</span>(<span class="title class_">JSON</span>.<span class="title function_">stringify</span>(obj));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>缺点：无法实现对象中方法的深拷贝，会显示为undefined;</p>
+<ol start="3">
+<li>通过Jquery的extend方法实现深拷贝</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>];</span><br><span class="line"><span class="keyword">let</span> newArr = $.<span class="title function_">extend</span>(<span class="literal">true</span>, [], arr);</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>通过lodash函数实现深拷贝</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> result = _.<span class="title function_">cloneDeep</span>(test);</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>Reflect法</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// # 代理法</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">deepClone</span> (obj) &#123;</span><br><span class="line">  <span class="keyword">if</span> (!<span class="title function_">isObject</span>(obj)) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&#x27;obj 不是一个对象&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">let</span> isArray = <span class="title class_">Array</span>.<span class="title function_">isArray</span>(obj);</span><br><span class="line">  <span class="keyword">let</span> cloneObj = isArray ? [...obj] : &#123; ...obj &#125;;</span><br><span class="line">  <span class="title class_">Reflect</span>.<span class="title function_">ownKeys</span>(cloneObj).<span class="title function_">forEach</span>(<span class="function"><span class="params">key</span> =&gt;</span> &#123;</span><br><span class="line">    cloneObj[key] = <span class="title function_">isObject</span>(obj[key]) ? <span class="title function_">deepClone</span>(obj[key]) : obj[key];</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="keyword">return</span> cloneObj;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="参考文案"><a class="markdownIt-Anchor" href="#参考文案"></a> 参考文案</h2>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/1c142ec2ca45">js浅拷贝与深拷贝的区别和实现方式</a></li>
+</ol>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://www.amaoc.cn/2023/11/15/%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E6%B5%85%E6%8B%B7%E8%B4%9D/" title="深拷贝与浅拷贝" target="_blank" rel="external">http://www.amaoc.cn/2023/11/15/深拷贝与浅拷贝/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/amaoc" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/amaoc" target="_blank"><span class="text-dark">Amaoc</span><small class="ml-1x">Web Developer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2023/11/15/js%E4%B8%AD%E7%9A%84%E6%A0%88%E5%86%85%E5%AD%98%E5%92%8C%E5%A0%86%E5%86%85%E5%AD%98/" title="js中的栈内存和堆内存"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2023/11/15/js%E4%B8%ADnull%E3%80%81undefined%E6%B5%85%E8%B0%88/" title="js中null、undefined浅谈"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+    <li class="toggle-toc">
+      <a class="toggle-btn " data-toggle="collapse" href="#collapseToc" aria-expanded="false" title="文章目录" role="button">    <span>[&nbsp;</span><span>文章目录</span>
+        <i class="text-collapsed icon icon-anchor"></i>
+        <i class="text-in icon icon-close"></i>
+        <span>]</span>
+      </a>
+    </li>
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/amaoc" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+<script src="//cdn.jsdelivr.net/npm/gitment@0.0.3/dist/gitment.browser.min.js"></script>
+<script>
+var gitment = new Gitment({
+  // id默认为当前页面url，如果url后带参数或锚点，gitment要重新初始化
+  // https://github.com/imsun/gitment/issues/55
+  // 解决方案：id:window.location.pathname,或者将id设置为当前页面标题
+  id: '深拷贝与浅拷贝', 
+  owner: '', // 可以是你的GitHub用户名，也可以是github id
+  repo: '',
+  oauth: {
+    client_id: '',
+    client_secret: '',
+  }
+})
+gitment.render('comments')
+</script>
+
+
+
+
+
+
+
+
+
+</body>
+</html>
