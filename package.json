@@ -5,7 +5,8 @@
     "build": "hexo generate",
     "clean": "hexo clean",
     "deploy": "hexo deploy",
-    "server": "hexo server"
+    "server": "hexo server",
+    "publish": "cp -rf ./public/* ../amaoc.github.io/ && cd ../amaoc.github.io && git add . && git commit -m 'publish' && git push && cd ../amaoc"
   },
   "hexo": {
     "version": "6.3.0"
