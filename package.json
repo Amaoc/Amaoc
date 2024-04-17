@@ -6,7 +6,7 @@
     "clean": "hexo clean",
     "deploy": "hexo deploy",
     "server": "hexo server",
-    "publish": "cp -rf ./public/* ../amaoc.github.io/ && cd ../amaoc.github.io && git pull && git add . && git commit -m 'publish' && git push && cd ../amaoc"
+    "publish": "cd ../amaoc.github.io && git pull && cd ../Amaoc && cp -rf ./public/* ../amaoc.github.io/ && cd ../amaoc.github.io && git pull && git add . && git commit -m 'publish' && git push && cd ../Amaoc"
   },
   "hexo": {
     "version": "6.3.0"
